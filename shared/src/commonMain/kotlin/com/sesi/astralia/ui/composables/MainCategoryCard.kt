@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,12 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import astralia.shared.generated.resources.Res
 import astralia.shared.generated.resources.mysticism
+import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun MainCategoryCard() {
-    val cardShape = RoundedCornerShape(13)
+    val cardShape = RoundedCornerShape(6)
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().height(300.dp)
             .border(width = 2.dp, color = MaterialTheme.colorScheme.tertiary, shape = cardShape),
@@ -70,7 +72,9 @@ fun MainCategoryCard() {
 }
 
 val gradient = Brush.linearGradient(
-    colors = listOf(Color.White, Color.Black)
+    colors = listOf(Background.copy(alpha = 0.2f), Background),
+    start = Offset(0f,0f),
+    end = Offset(0f, 500f)
 )
 
 @Preview(uiMode = UI_MODE_NIGHT_YES)

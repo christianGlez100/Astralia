@@ -18,6 +18,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -28,6 +29,7 @@ import com.sesi.astralia.ui.navigation.MainNavigation
 import com.sesi.astralia.ui.navigation.Routes
 import com.sesi.astralia.ui.navigation.navigationItemsLists
 
+@Preview
 @Composable
 fun MainScreen() {
     val rootNavController = rememberNavController()

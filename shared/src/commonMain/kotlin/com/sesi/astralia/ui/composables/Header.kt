@@ -8,50 +8,64 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import astralia.shared.generated.resources.Res
+import astralia.shared.generated.resources.ic_left_arrow
+import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.painterResource
 
 
 @Composable
-fun AppHeader(title: String, isBackVisible: Boolean = false, onBackEvent: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.primary)
-            .fillMaxWidth()
-            .height(60.dp)
-    ) {
-        if (isBackVisible) {
+fun AppHeader(title: String = "Astralia", isBackVisible: Boolean = false, onBackEvent: () -> Unit) {
+    CelestialSoulTheme {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.primaryContainer)
+                .fillMaxWidth()
+                .height(60.dp)
+        ) {
+            if (isBackVisible) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    IconButton(onClick = { onBackEvent() }) {
+                        // Using a placeholder icon since Res.drawable.ic_left_arrow is missing
+                        Icon(
+                            painter = painterResource(Res.drawable.ic_left_arrow),
+                            contentDescription = "back button",
+                            tint = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+            }
             Row(
                 modifier = Modifier.fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.Center
             ) {
-                IconButton(onClick = { onBackEvent() }) {
-                    // Using a placeholder icon since Res.drawable.ic_left_arrow is missing
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(MaterialTheme.colorScheme.onPrimary)
-                    )
-                }
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
             }
         }
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
-        }
     }
+}
+
+@Composable
+@Preview
+fun preview(){
+    AppHeader(title = "Astralia", isBackVisible = true, onBackEvent = {})
 }

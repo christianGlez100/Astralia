@@ -66,6 +66,15 @@ kotlin {
 
             //Navigation
             implementation(libs.androidx.navigation.compose)
+
+            //preview
+            implementation("org.jetbrains.compose.ui:ui-tooling-preview:1.11.1")
+
+            //landscapist-coil3
+            //implementation(libs.landscapist.coil)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -78,4 +87,5 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
+    androidRuntimeClasspath("org.jetbrains.compose.ui:ui-tooling:1.11.1")
 }

@@ -18,11 +18,23 @@ import org.jetbrains.compose.resources.painterResource
 
 import astralia.shared.generated.resources.Res
 import astralia.shared.generated.resources.compose_multiplatform
+import coil3.ImageLoader
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.request.crossfade
+import coil3.util.DebugLogger
+import com.sesi.astralia.ui.screens.MainScreen
+import com.sesi.astralia.ui.theme.CelestialSoulTheme
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    CelestialSoulTheme {
+        setSingletonImageLoaderFactory { context ->
+            ImageLoader.Builder(context).crossfade(true).logger(DebugLogger()).build()
+        }
+        MainScreen()
+    }
+    /*MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
@@ -46,4 +58,6 @@ fun App() {
             }
         }
     }
+
+     */
 }

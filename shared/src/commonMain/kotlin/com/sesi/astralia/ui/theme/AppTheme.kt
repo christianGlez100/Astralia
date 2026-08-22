@@ -95,7 +95,7 @@ private val CelestialLightColorScheme = lightColorScheme(
 
 @Composable
 fun CelestialSoulTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

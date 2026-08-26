@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -75,9 +76,19 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network)
 
+            //Koin
+            api(project.dependencies.platform(libs.koin.bom))
+            api(libs.koin.core)
+            implementation(libs.koin.annotations)
+            implementation(libs.koin.compose)
+            //implementation(libs.precompose.koin)
+            implementation(libs.koin.viewmodel)
+            implementation(libs.koin.viewmodel.navigation)
+
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.koin.test)
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)
@@ -87,5 +98,4 @@ kotlin {
 
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
-    androidRuntimeClasspath("org.jetbrains.compose.ui:ui-tooling:1.11.1")
 }

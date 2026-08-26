@@ -17,6 +17,9 @@ kotlin-wrappers = "2026.7.2"
 material3 = "1.11.0-alpha07"
 coil = "3.5.0"
 coil-network = "3.5.0"
+supabase = "3.7.0"
+koin = "4.2.2"
+koin-plugin = "1.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -40,6 +43,18 @@ compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-previ
 wrappers-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", version.ref = "kotlin-wrappers" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil-network" }
+# Supabase
+supabase-auth = { module = "io.github.jan-se.supabase:supabase-auth", version.ref = "supabase" }
+supabase-postgrest = { module = "io.github.jan-se.supabase:supabase-postgrest", version.ref = "supabase" }
+supabase-storage = { module = "io.github.jan-se.supabase:supabase-storage", version.ref = "supabase" }
+# Koin
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core"}
+koin-annotations = { module = "io.insert-koin:koin-annotations"}
+koin-compose = { module = "io.insert-koin:koin-compose"}
+koin-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation"}
+koin-test = { module = "io.insert-koin:koin-test" }
 
 
 [plugins]
@@ -48,3 +63,4 @@ androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library",
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }

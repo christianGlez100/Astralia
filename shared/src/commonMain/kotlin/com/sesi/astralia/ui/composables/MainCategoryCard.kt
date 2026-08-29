@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,19 +19,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import astralia.shared.generated.resources.Res
 import astralia.shared.generated.resources.mysticism
+import coil3.compose.AsyncImage
+import com.sesi.astralia.data.model.Category
 import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun MainCategoryCard() {
+fun MainCategoryCard(item: Category) {
     val cardShape = RoundedCornerShape(6)
     ElevatedCard(
         modifier = Modifier.fillMaxWidth().height(300.dp)
@@ -41,24 +41,29 @@ fun MainCategoryCard() {
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-
-            Image(
+            AsyncImage(
+                model = item.imageUrl,
+                contentDescription = "",
+                modifier = Modifier.fillMaxSize().background(brush = gradient),
+                contentScale = ContentScale.FillBounds
+            )
+           /* Image(
                 modifier = Modifier.fillMaxSize().background(brush = gradient),
                 painter = painterResource(Res.drawable.mysticism),
                 contentDescription = "",
                 contentScale = ContentScale.FillBounds
-            )
+            )*/
             Column(
                 modifier = Modifier.align(Alignment.BottomCenter)
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Text(
-                    text = "Mysticism",
+                    text = item.name,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
-                    text = "El misticismo es unav adasdad asdsdre dosdasdsdsdsdasnde encontratras asdada. asdadasdasdadadasdas.adasdasd",
+                    text = item.description,
                     maxLines = 3,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -81,6 +86,6 @@ val gradient = Brush.linearGradient(
 @Composable
 fun PreviewCard() {
     CelestialSoulTheme {
-        MainCategoryCard()
+        MainCategoryCard(Category(id = 1, name = "Mysticism", imageUrl = "", order = 1, description = "Description"))
     }
 }

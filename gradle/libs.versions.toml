@@ -17,9 +17,10 @@ kotlin-wrappers = "2026.7.2"
 material3 = "1.11.0-alpha07"
 coil = "3.5.0"
 coil-network = "3.5.0"
-supabase = "3.7.0"
+supabase = "3.8.0"
 koin = "4.2.2"
 koin-plugin = "1.1.0"
+ktor-client = "3.5.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -44,17 +45,30 @@ wrappers-browser = { module = "org.jetbrains.kotlin-wrappers:kotlin-browser", ve
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil-network" }
 # Supabase
-supabase-auth = { module = "io.github.jan-se.supabase:supabase-auth", version.ref = "supabase" }
-supabase-postgrest = { module = "io.github.jan-se.supabase:supabase-postgrest", version.ref = "supabase" }
-supabase-storage = { module = "io.github.jan-se.supabase:supabase-storage", version.ref = "supabase" }
+supabase-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabase" }
+supabase-auth = { module = "io.github.jan-tennert.supabase:auth-kt"}
+supabase-postgrest = { module = "io.github.jan-tennert.supabase:postgrest-kt"}
+supabase-storage = { module = "io.github.jan-tennert.supabase:storage-kt"}
 # Koin
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core"}
+koin-android = { module = "io.insert-koin:koin-android"}
 koin-annotations = { module = "io.insert-koin:koin-annotations"}
 koin-compose = { module = "io.insert-koin:koin-compose"}
 koin-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation"}
 koin-test = { module = "io.insert-koin:koin-test" }
+#Kto client
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-client" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-client" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor-client" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-client" }
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor-client" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor-client" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-client"}
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-client" }
+
+
 
 
 [plugins]
@@ -64,3 +78,4 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

@@ -13,6 +13,7 @@ object Graph {
 
 sealed class Routes(var route: String) {
     data object Home : Routes("home")
+    data object SubCategory : Routes("subCategory")
     data object SignIn : Routes("SignIn")
     data object LogIn : Routes("login")
     data object Profile: Routes("profile")

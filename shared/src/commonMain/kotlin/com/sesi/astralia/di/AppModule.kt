@@ -1,9 +1,17 @@
 package com.sesi.astralia.di
 
 import com.sesi.astralia.data.datasource.CategoryDataSource
+import com.sesi.astralia.data.datasource.ContentDataSource
+import com.sesi.astralia.data.datasource.SubCategoryDataSource
 import com.sesi.astralia.data.repository.CategoryRepository
+import com.sesi.astralia.data.repository.ContentRepository
+import com.sesi.astralia.data.repository.SubCategoryRepository
 import com.sesi.astralia.data.repository.impl.CategoryRepositoryImpl
+import com.sesi.astralia.data.repository.impl.ContentRepositoryImpl
+import com.sesi.astralia.data.repository.impl.SubCategoryRepositoryImpl
 import com.sesi.astralia.presenter.viewmodel.CategoryViewModel
+import com.sesi.astralia.presenter.viewmodel.ContentViewModel
+import com.sesi.astralia.presenter.viewmodel.SubCategoryViewModel
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.logging.LogLevel
@@ -26,8 +34,13 @@ fun appModule() = module{
             install(Storage)
         }
     }
+    single { SubCategoryDataSource(get()) }.withOptions { createdAtStart() }
+    single { ContentDataSource(get()) }.withOptions { createdAtStart() }
     single { CategoryDataSource(get()) }.withOptions { createdAtStart() }
     single<CategoryRepository> { CategoryRepositoryImpl(get()) }.withOptions { createdAtStart() }
+    single<SubCategoryRepository> { SubCategoryRepositoryImpl(get()) }.withOptions { createdAtStart() }
+    single<ContentRepository> { ContentRepositoryImpl(get()) }.withOptions { createdAtStart() }
     viewModel { CategoryViewModel(get()) }
-   // viewModelOf(::CategoryViewModel)
+    viewModel { SubCategoryViewModel(get()) }
+    viewModel { ContentViewModel(get()) }
 }

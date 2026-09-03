@@ -20,19 +20,25 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigator
+import androidx.navigation.compose.rememberNavController
 import astralia.shared.generated.resources.Res
 import astralia.shared.generated.resources.loading
-import com.sesi.astralia.data.model.Category
+import com.sesi.astralia.domain.dto.CategoryDto
 import com.sesi.astralia.presenter.viewmodel.CategoryState
 import com.sesi.astralia.presenter.viewmodel.CategoryViewModel
 import com.sesi.astralia.ui.composables.MainCategoryCard
+import com.sesi.astralia.ui.navigation.NavData
+import com.sesi.astralia.ui.navigation.Routes
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CategoryScreen(
-    viewModel: CategoryViewModel = koinViewModel()
+    viewModel: CategoryViewModel = koinViewModel(),
+    navController: NavHostController
 ) {
     val state: CategoryState by viewModel.state.collectAsStateWithLifecycle()
     viewModel.getAllCategories()
@@ -47,7 +53,7 @@ fun CategoryScreen(
         }
         is CategoryState.Success -> {
             val response = (state as CategoryState.Success).categories
-            BodyCategory(response)
+            BodyCategory(response, navController)
         }
         is CategoryState.Error -> {}
     }
@@ -55,14 +61,19 @@ fun CategoryScreen(
 }
 
 @Composable
-fun BodyCategory(response: List<Category>) {
+fun BodyCategory(response: List<CategoryDto>, navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight().background(MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(modifier = Modifier.padding(start = 16.dp, end = 16.dp),verticalArrangement = Arrangement.spacedBy(16.dp)) {
             items(response) { item ->
-                MainCategoryCard(item)
+                MainCategoryCard(item){ categoryId ->
+                    NavData.categoryId = categoryId
+                    NavData.categoryName = item.name
+                    NavData.categoryDescription = item.description
+                    navController.navigate(Routes.SubCategory.route)
+                }
             }
         }
     }
@@ -71,9 +82,9 @@ fun BodyCategory(response: List<Category>) {
 @Preview
 @Composable
 fun PreviewCategoryScreen() {
-    val cat = Category(id = 1, name = "Mysticism", imageUrl = "", order = 1, description = "Description")
+    val cat = CategoryDto(id = 1, name = "Mysticism", imageUrl = "", order = 1, description = "Description")
     val categories = listOf(cat)
     CelestialSoulTheme {
-        BodyCategory(categories)
+        BodyCategory(categories, rememberNavController())
     }
 }

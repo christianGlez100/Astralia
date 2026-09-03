@@ -1,5 +1,6 @@
 package com.sesi.astralia.data.model
 
+import com.sesi.astralia.domain.dto.CategoryDto
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,3 +13,13 @@ data class Category(
     val order: Int,
     val description: String,
 )
+
+fun Category.toDomain(): CategoryDto{
+    return CategoryDto(
+        id = id,
+        name = name,
+        imageUrl = imageUrl,
+        order = order,
+        description = description
+    )
+}

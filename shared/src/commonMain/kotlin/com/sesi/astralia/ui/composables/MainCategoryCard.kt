@@ -1,8 +1,8 @@
 package com.sesi.astralia.ui.composables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,20 +23,21 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import astralia.shared.generated.resources.Res
-import astralia.shared.generated.resources.mysticism
 import coil3.compose.AsyncImage
 import com.sesi.astralia.data.model.Category
+import com.sesi.astralia.domain.dto.CategoryDto
 import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
-import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun MainCategoryCard(item: Category) {
+fun MainCategoryCard(item: CategoryDto, onClick: (id:Long) -> Unit = {}) {
     val cardShape = RoundedCornerShape(6)
     ElevatedCard(
-        modifier = Modifier.fillMaxWidth().height(300.dp)
-            .border(width = 2.dp, color = MaterialTheme.colorScheme.tertiary, shape = cardShape),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .border(width = 2.dp, color = MaterialTheme.colorScheme.tertiary, shape = cardShape)
+            .clickable{ onClick(item.id)},
         shape = cardShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
@@ -86,6 +87,6 @@ val gradient = Brush.linearGradient(
 @Composable
 fun PreviewCard() {
     CelestialSoulTheme {
-        MainCategoryCard(Category(id = 1, name = "Mysticism", imageUrl = "", order = 1, description = "Description"))
+        MainCategoryCard(CategoryDto(id = 1, name = "Mysticism", imageUrl = "", order = 1, description = "Description"))
     }
 }

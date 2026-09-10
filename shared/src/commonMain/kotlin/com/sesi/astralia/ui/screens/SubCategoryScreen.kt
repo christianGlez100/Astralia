@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import astralia.shared.generated.resources.Res
 import astralia.shared.generated.resources.loading
 import com.sesi.astralia.domain.dto.SubCategoryDto
@@ -32,13 +34,17 @@ import com.sesi.astralia.presenter.viewmodel.SubCategoryState
 import com.sesi.astralia.presenter.viewmodel.SubCategoryViewModel
 import com.sesi.astralia.ui.composables.SubCategoryCard
 import com.sesi.astralia.ui.navigation.NavData
+import com.sesi.astralia.ui.navigation.Routes
 import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SubCategoryScreen(viewModel: SubCategoryViewModel = koinViewModel()) {
+fun SubCategoryScreen(
+    viewModel: SubCategoryViewModel = koinViewModel(),
+    navController: NavHostController
+) {
     val state: SubCategoryState by viewModel.state.collectAsStateWithLifecycle()
     viewModel.getSubCategoriesByCategoryId(NavData.categoryId!!)
 
@@ -54,7 +60,7 @@ fun SubCategoryScreen(viewModel: SubCategoryViewModel = koinViewModel()) {
 
         is SubCategoryState.Success -> {
             val response = (state as SubCategoryState.Success).subCategories
-            BodySubCategory(response)
+            BodySubCategory(response, navController)
         }
 
         is SubCategoryState.Error -> {}
@@ -63,7 +69,7 @@ fun SubCategoryScreen(viewModel: SubCategoryViewModel = koinViewModel()) {
 }
 
 @Composable
-fun BodySubCategory(response: List<SubCategoryDto>) {
+fun BodySubCategory(response: List<SubCategoryDto>, navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -96,6 +102,7 @@ fun BodySubCategory(response: List<SubCategoryDto>) {
                     items(response) { item ->
                         SubCategoryCard(item){ subCategoryId ->
                             NavData.subCategoryId = subCategoryId
+                            navController.navigate(Routes.Content.route)
                         }
                     }
                 }
@@ -125,6 +132,6 @@ fun PreviewSubCategoryScreen() {
             description = "Description",
             categoryId = 1
         )
-        BodySubCategory(listOf(subCategoryDto))
+        BodySubCategory(listOf(subCategoryDto), rememberNavController())
     }
 }

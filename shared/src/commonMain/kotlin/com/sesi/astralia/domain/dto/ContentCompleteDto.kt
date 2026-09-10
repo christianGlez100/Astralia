@@ -5,5 +5,5 @@ data class ContentCompleteDto(
     val id: Long,
     val name: String,
     val description: String,
-    val contentType: ContentTypeDto
+    val contentType: List<ContentTypeDto>
 )

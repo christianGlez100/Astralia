@@ -27,6 +27,6 @@ class ContentViewModel(private val contentRepository: ContentRepository) : ViewM
 
 sealed class ContentState {
     object Loading : ContentState()
-    data class Success(val content: ContentCompleteDto) : ContentState()
+    data class Success(val content: List<ContentCompleteDto>) : ContentState()
     data class Error(val message: String) : ContentState()
 }

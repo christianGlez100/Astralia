@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sesi.astralia.ui.screens.CategoryScreen
+import com.sesi.astralia.ui.screens.ContentScreen
 import com.sesi.astralia.ui.screens.SubCategoryScreen
 
 @Composable
@@ -25,8 +26,12 @@ fun MainNavigation(rootNavController: NavHostController, snackbarHostState: Snac
             CategoryScreen(navController = rootNavController)
         }
         composable(route = Routes.SubCategory.route) {
-            SubCategoryScreen()
+            SubCategoryScreen(navController = rootNavController)
         }
+        composable(route = Routes.Content.route) {
+            ContentScreen(navController = rootNavController)
+        }
+
 
     }
 }

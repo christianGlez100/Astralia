@@ -47,7 +47,7 @@ fun MainScreen() {
 
     val isBottomBarVisible by remember {
         derivedStateOf {
-            navigationItem?.route != Routes.HomeDetail.route
+            navigationItem?.route != Routes.Home.route
         }
     }
     val title by remember {

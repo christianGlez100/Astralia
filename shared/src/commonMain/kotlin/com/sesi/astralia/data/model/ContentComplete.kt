@@ -8,7 +8,7 @@ data class ContentComplete(
     val id: Long,
     val name: String,
     val description: String,
-    val contentType: ContentType
+    val contentType: List<ContentType>
 ) {
 }
 
@@ -17,6 +17,6 @@ fun ContentComplete.toDomain(): ContentCompleteDto {
         id = id,
         name = name,
         description = description,
-        contentType = contentType.toDomain()
+        contentType = contentType.map { it.toDomain() }
     )
 }

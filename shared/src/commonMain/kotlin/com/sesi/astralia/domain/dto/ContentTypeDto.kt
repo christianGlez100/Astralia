@@ -4,7 +4,7 @@ data class ContentTypeDto(
     val id: Long,
     val title: String,
     val description: String,
-    val imageUrl: String,
+    val image: String,
     val contentId: Long,
     val element: String,
     val symbol: String,

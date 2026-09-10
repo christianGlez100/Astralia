@@ -11,12 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -26,6 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +45,7 @@ import com.sesi.astralia.domain.dto.ContentTypeDto
 import com.sesi.astralia.presenter.viewmodel.ContentState
 import com.sesi.astralia.presenter.viewmodel.ContentViewModel
 import com.sesi.astralia.ui.navigation.NavData
+import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -73,28 +77,38 @@ fun ContentScreen(
 @Composable
 fun BodyContent(response: List<ContentCompleteDto>, navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
-        val pagerState = rememberPagerState(pageCount = {response.size})
+        val pagerState = rememberPagerState(pageCount = {response.first().contentType.size})
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxSize()) { page ->
-            ItemContent(response[page])
+            ItemContent(response.first().contentType[page])
         }
     }
 }
 
 @Composable
-fun ItemContent(item: ContentCompleteDto) {
+fun ItemContent(item: ContentTypeDto) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight()
-            .background(MaterialTheme.colorScheme.primaryContainer),
+            .background(MaterialTheme.colorScheme.primaryContainer)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier.fillMaxWidth().height(350.dp)) {
+            val gradient = Brush.linearGradient(
+                colors = listOf(Background.copy(alpha = 0.1f), Background.copy(alpha = 0.7f)),
+                start = Offset(0f,0f),
+                end = Offset(0f, 500f)
+            )
             AsyncImage(
-                model = item.contentType.imageUrl,
+                model = item.image,
                 contentDescription = "",
                 contentScale = ContentScale.FillBounds,
-                modifier = Modifier.fillMaxWidth().height(350.dp),
+                modifier = Modifier.fillMaxWidth().height(350.dp)
+                    .drawWithContent{
+                        drawContent()
+                        drawRect(brush = gradient)
+                    },
                 alpha = 0.8f
             )
             Column(
@@ -102,14 +116,14 @@ fun ItemContent(item: ContentCompleteDto) {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Text(
-                    text = item.contentType.title,
+                    text = item.title,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = item.contentType.description,
+                    text = item.description,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
                     minLines = 3,
@@ -151,8 +165,8 @@ fun ItemContent(item: ContentCompleteDto) {
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
-                val characteristics = item.contentType.characteristics.split("|")
-                LazyColumn(
+                val characteristics = item.characteristics.split("|")
+                Column(
                     modifier = Modifier.padding(
                         start = 32.dp,
                         end = 16.dp,
@@ -161,9 +175,9 @@ fun ItemContent(item: ContentCompleteDto) {
                     ),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(characteristics) { item ->
+                    characteristics.forEach { characteristic ->
                         Text(
-                            text = item,
+                            text = characteristic,
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = 1,
                             minLines = 1,
@@ -193,21 +207,21 @@ fun ItemContent(item: ContentCompleteDto) {
                 elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
             ) {
                 Text(
-                    text = "Elemento: ${item.contentType.element}",
+                    text = "Elemento: ${item.element}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Simbolo: ${item.contentType.symbol}",
+                    text = "Simbolo: ${item.symbol}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Virtud: ${item.contentType.virtue}",
+                    text = "Virtud: ${item.virtue}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth()
@@ -226,7 +240,7 @@ fun PreviewContentScreen() {
         val response = mutableListOf<ContentCompleteDto>()
         val contentType = ContentTypeDto(
             id = 1L, title = "Name", description = "Description",
-            imageUrl = "",
+            image = "",
             contentId = 2L,
             element = "fuego",
             symbol = "Luna",
@@ -237,7 +251,7 @@ fun PreviewContentScreen() {
             id = 1L,
             name = "Name",
             description = "Description",
-            contentType = contentType
+            contentType = listOf(contentType)
         )
         response.add(contentCompleteDto)
         BodyContent(response, rememberNavController())

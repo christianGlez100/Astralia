@@ -1,9 +1,7 @@
 package com.sesi.astralia.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,36 +10,80 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import astralia.shared.generated.resources.Res
-import astralia.shared.generated.resources.mysticism
+import astralia.shared.generated.resources.loading
 import coil3.compose.AsyncImage
+import com.sesi.astralia.domain.dto.ContentCompleteDto
+import com.sesi.astralia.domain.dto.ContentTypeDto
+import com.sesi.astralia.presenter.viewmodel.ContentState
+import com.sesi.astralia.presenter.viewmodel.ContentViewModel
+import com.sesi.astralia.ui.navigation.NavData
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
-import com.sesi.astralia.ui.theme.SurfaceBright
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun ContentScreen() {
-    BodyContent()
+fun ContentScreen(
+    viewModel: ContentViewModel = koinViewModel(),
+    navController: NavHostController) {
+    val state: ContentState by viewModel.state.collectAsStateWithLifecycle()
+    viewModel.getContentBySubCategoryId(NavData.subCategoryId!!)
+    when(state) {
+        is ContentState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize().testTag(stringResource(Res.string.loading)),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is ContentState.Success -> {
+            val response = (state as ContentState.Success).content
+            BodyContent(response,navController)
+        }
+        is ContentState.Error -> {}
+    }
+
 }
 
 @Composable
-fun BodyContent() {
+fun BodyContent(response: List<ContentCompleteDto>, navController: NavHostController) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        val pagerState = rememberPagerState(pageCount = {response.size})
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()) { page ->
+            ItemContent(response[page])
+        }
+    }
+}
+
+@Composable
+fun ItemContent(item: ContentCompleteDto) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight()
             .background(MaterialTheme.colorScheme.primaryContainer),
@@ -49,7 +91,7 @@ fun BodyContent() {
     ) {
         Box(modifier = Modifier.fillMaxWidth().height(350.dp)) {
             AsyncImage(
-                model = Res.drawable.mysticism,
+                model = item.contentType.imageUrl,
                 contentDescription = "",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxWidth().height(350.dp),
@@ -60,14 +102,14 @@ fun BodyContent() {
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Text(
-                    text = "Las Hadas",
+                    text = item.contentType.title,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "sda",
+                    text = item.contentType.description,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 3,
                     minLines = 3,
@@ -79,15 +121,26 @@ fun BodyContent() {
 
         }
 
-        Column(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(start = 16.dp, end = 16.dp, top = 16.dp)) {
+        Column(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        ) {
             val cardShape = RoundedCornerShape(12)
             ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .border(width = 2.dp, color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f), shape = cardShape),
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f),
+                        shape = cardShape
+                    ),
                 shape = cardShape,
-                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.3f)),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.onSecondary.copy(
+                        alpha = 0.3f
+                    )
+                ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
             ) {
 
@@ -98,13 +151,19 @@ fun BodyContent() {
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
+                val characteristics = item.contentType.characteristics.split("|")
                 LazyColumn(
-                    modifier = Modifier.padding(start = 32.dp, end = 16.dp, top = 16.dp, bottom = 16.dp),
+                    modifier = Modifier.padding(
+                        start = 32.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 16.dp
+                    ),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    items(5) {
+                    items(characteristics) { item ->
                         Text(
-                            text = "sda",
+                            text = item,
                             style = MaterialTheme.typography.bodyMedium,
                             maxLines = 1,
                             minLines = 1,
@@ -119,39 +178,44 @@ fun BodyContent() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .border(width = 2.dp, color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f), shape = cardShape)
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f),
+                        shape = cardShape
+                    )
                     .padding(top = 16.dp),
                 shape = cardShape,
-                colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.3f)),
+                colors = CardDefaults.elevatedCardColors(
+                    containerColor = MaterialTheme.colorScheme.onSecondary.copy(
+                        alpha = 0.3f
+                    )
+                ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
             ) {
                 Text(
-                    text = "Elemento:",
+                    text = "Elemento: ${item.contentType.element}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Simbolo:",
+                    text = "Simbolo: ${item.contentType.symbol}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
                     modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp),
                     textAlign = TextAlign.Start
                 )
                 Text(
-                    text = "Virtud:",
+                    text = "Virtud: ${item.contentType.virtue}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp, start = 16.dp, bottom = 16.dp),
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(top = 16.dp, start = 16.dp, bottom = 16.dp),
                     textAlign = TextAlign.Start
                 )
             }
-
-
         }
-
-
     }
 }
 
@@ -159,6 +223,23 @@ fun BodyContent() {
 @Composable
 fun PreviewContentScreen() {
     CelestialSoulTheme {
-        BodyContent()
+        val response = mutableListOf<ContentCompleteDto>()
+        val contentType = ContentTypeDto(
+            id = 1L, title = "Name", description = "Description",
+            imageUrl = "",
+            contentId = 2L,
+            element = "fuego",
+            symbol = "Luna",
+            virtue = "Valor",
+            characteristics = "e1|e2|e3"
+        )
+        val contentCompleteDto = ContentCompleteDto(
+            id = 1L,
+            name = "Name",
+            description = "Description",
+            contentType = contentType
+        )
+        response.add(contentCompleteDto)
+        BodyContent(response, rememberNavController())
     }
 }

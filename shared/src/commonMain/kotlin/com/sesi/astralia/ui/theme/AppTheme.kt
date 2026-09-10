@@ -9,6 +9,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Density
+import com.sesi.astralia.shared.getStatusBar
 
 private val CelestialDarkColorScheme = darkColorScheme(
 
@@ -112,6 +113,9 @@ fun CelestialSoulTheme(
         density = currentDensity.density,
         fontScale = 1f
     )
+
+    val statusBar = getStatusBar()
+    statusBar.setStatusBar(darkTheme)
 
     CompositionLocalProvider(LocalDensity provides customDensity) {
         MaterialTheme(

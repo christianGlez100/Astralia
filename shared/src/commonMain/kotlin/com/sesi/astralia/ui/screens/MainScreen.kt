@@ -1,6 +1,8 @@
 package com.sesi.astralia.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
@@ -50,6 +52,18 @@ fun MainScreen() {
             navigationItem?.route != Routes.Home.route
         }
     }
+
+    val isHeaderVisible by remember {
+        derivedStateOf {
+            currentRoute != Routes.Content.route
+        }
+    }
+
+    val backButtonHeaderIsVisible by remember {
+        derivedStateOf {
+            navigationItem?.route != Routes.Home.route
+        }
+    }
     val title by remember {
         derivedStateOf {
             navigationItem?.title ?: ""
@@ -75,7 +89,7 @@ fun MainScreen() {
         Scaffold(
             bottomBar = {
                 AnimatedVisibility(
-                    visible = isBottomBarVisible,
+                    visible = false,
                     enter = slideInVertically(
                         // Slide in from the bottom
                         initialOffsetY = { fullHeight -> fullHeight }
@@ -94,7 +108,23 @@ fun MainScreen() {
                     )
                 }
             },
-            topBar = { AppHeader(title = title, isBackVisible = false) {} },
+            topBar = {
+                AnimatedVisibility(
+                    visible = isHeaderVisible,
+                    enter = slideInVertically(
+                        // Slide in from the bottom
+                        initialOffsetY = { fullHeight -> -fullHeight }
+                    ) + fadeIn(),
+                    exit = slideOutVertically(
+                        // Slide out to the bottom
+                        targetOffsetY = { fullHeight -> -fullHeight }
+                    ) + fadeOut()
+                ) {
+                    AppHeader(title = title, isBackVisible = backButtonHeaderIsVisible) {
+                        rootNavController.popBackStack()
+                    }
+                }
+            },
             snackbarHost = { SnackbarHost(snackbarHostState) }
 
         ) { innerPadding ->

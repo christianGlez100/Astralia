@@ -21,6 +21,8 @@ supabase = "3.8.0"
 koin = "4.2.2"
 koin-plugin = "1.1.0"
 ktor-client = "3.5.2"
+kotlinx-coroutines = "1.11.0"
+turbine = "1.2.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -58,6 +60,8 @@ koin-compose = { module = "io.insert-koin:koin-compose"}
 koin-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 koin-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation"}
 koin-test = { module = "io.insert-koin:koin-test" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 #Kto client
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-client" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-client" }

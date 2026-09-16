@@ -57,7 +57,6 @@ import com.sesi.astralia.domain.dto.ContentCompleteDto
 import com.sesi.astralia.domain.dto.ContentTypeDto
 import com.sesi.astralia.presenter.viewmodel.ContentState
 import com.sesi.astralia.presenter.viewmodel.ContentViewModel
-import com.sesi.astralia.ui.navigation.NavData
 import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
 import com.sesi.astralia.ui.theme.Tertiary
@@ -68,9 +67,11 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun ContentScreen(
     viewModel: ContentViewModel = koinViewModel(),
-    navController: NavHostController) {
+    navController: NavHostController,
+    subCategoryId: Long
+) {
     val state: ContentState by viewModel.state.collectAsStateWithLifecycle()
-    viewModel.getContentBySubCategoryId(NavData.subCategoryId!!)
+    viewModel.getContentBySubCategoryId(subCategoryId)
     when(state) {
         is ContentState.Loading -> {
             Box(

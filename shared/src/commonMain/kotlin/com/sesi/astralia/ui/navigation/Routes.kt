@@ -13,8 +13,12 @@ object Graph {
 
 sealed class Routes(var route: String) {
     data object Home : Routes("home")
-    data object SubCategory : Routes("subCategory")
-    data object Content : Routes("content")
+    data object SubCategory : Routes("subCategory/{categoryId}/{categoryName}/{categoryDescription}"){
+        fun createRoute(categoryId: Long, categoryName: String, categoryDescription: String) = "subCategory/$categoryId/$categoryName/$categoryDescription"
+    }
+    data object Content : Routes("content/{subCategoryId}"){
+        fun createRoute(subCategoryId: Long) = "content/$subCategoryId"
+    }
     data object SignIn : Routes("SignIn")
     data object LogIn : Routes("login")
     data object Profile: Routes("profile")

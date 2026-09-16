@@ -33,7 +33,6 @@ import com.sesi.astralia.domain.dto.SubCategoryDto
 import com.sesi.astralia.presenter.viewmodel.SubCategoryState
 import com.sesi.astralia.presenter.viewmodel.SubCategoryViewModel
 import com.sesi.astralia.ui.composables.SubCategoryCard
-import com.sesi.astralia.ui.navigation.NavData
 import com.sesi.astralia.ui.navigation.Routes
 import com.sesi.astralia.ui.theme.Background
 import com.sesi.astralia.ui.theme.CelestialSoulTheme
@@ -43,10 +42,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SubCategoryScreen(
     viewModel: SubCategoryViewModel = koinViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    categoryId: Long,
+    categoryName: String,
+    categoryDescription: String
 ) {
     val state: SubCategoryState by viewModel.state.collectAsStateWithLifecycle()
-    viewModel.getSubCategoriesByCategoryId(NavData.categoryId!!)
+    viewModel.getSubCategoriesByCategoryId(categoryId)
 
     when (state) {
         is SubCategoryState.Loading -> {
@@ -60,7 +62,7 @@ fun SubCategoryScreen(
 
         is SubCategoryState.Success -> {
             val response = (state as SubCategoryState.Success).subCategories
-            BodySubCategory(response, navController)
+            BodySubCategory(response, navController, categoryName, categoryDescription)
         }
 
         is SubCategoryState.Error -> {}
@@ -69,7 +71,12 @@ fun SubCategoryScreen(
 }
 
 @Composable
-fun BodySubCategory(response: List<SubCategoryDto>, navController: NavHostController) {
+fun BodySubCategory(
+    response: List<SubCategoryDto>,
+    navController: NavHostController,
+    categoryName: String,
+    categoryDescription: String
+) {
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -81,14 +88,14 @@ fun BodySubCategory(response: List<SubCategoryDto>, navController: NavHostContro
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             ) {
                 Text(
-                    text = NavData.categoryName.orEmpty(),
+                    text = categoryName,
                     style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
-                    text = NavData.categoryDescription.orEmpty(),
+                    text = categoryDescription,
                     maxLines = 3,
                     minLines = 3,
                     textAlign = TextAlign.Center,
@@ -100,8 +107,7 @@ fun BodySubCategory(response: List<SubCategoryDto>, navController: NavHostContro
                 ) {
                     items(response) { item ->
                         SubCategoryCard(item){ subCategoryId ->
-                            NavData.subCategoryId = subCategoryId
-                            navController.navigate(Routes.Content.route)
+                            navController.navigate(Routes.Content.createRoute(subCategoryId))
                         }
                     }
                 }
@@ -131,6 +137,11 @@ fun PreviewSubCategoryScreen() {
             description = "Description",
             categoryId = 1
         )
-        BodySubCategory(listOf(subCategoryDto), rememberNavController())
+        BodySubCategory(
+            listOf(subCategoryDto),
+            rememberNavController(),
+            "Hadas",
+            "Las Hadas Descrip"
+        )
     }
 }

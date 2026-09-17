@@ -1,7 +1,7 @@
 package com.sesi.astralia.presenter.viewmodel
 
 import app.cash.turbine.test
-import com.sesi.astralia.data.repository.SubCategoryRepository
+import com.sesi.astralia.domain.repository.SubCategoryRepository
 import com.sesi.astralia.domain.dto.SubCategoryDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,4 +1,4 @@
-package com.sesi.astralia.data.repository
+package com.sesi.astralia.domain.repository
 
 import com.sesi.astralia.domain.dto.ContentCompleteDto
 

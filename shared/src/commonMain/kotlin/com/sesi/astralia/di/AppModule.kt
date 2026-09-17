@@ -3,9 +3,9 @@ package com.sesi.astralia.di
 import com.sesi.astralia.data.datasource.CategoryDataSource
 import com.sesi.astralia.data.datasource.ContentDataSource
 import com.sesi.astralia.data.datasource.SubCategoryDataSource
-import com.sesi.astralia.data.repository.CategoryRepository
-import com.sesi.astralia.data.repository.ContentRepository
-import com.sesi.astralia.data.repository.SubCategoryRepository
+import com.sesi.astralia.domain.repository.CategoryRepository
+import com.sesi.astralia.domain.repository.ContentRepository
+import com.sesi.astralia.domain.repository.SubCategoryRepository
 import com.sesi.astralia.data.repository.impl.CategoryRepositoryImpl
 import com.sesi.astralia.data.repository.impl.ContentRepositoryImpl
 import com.sesi.astralia.data.repository.impl.SubCategoryRepositoryImpl

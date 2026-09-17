@@ -2,7 +2,7 @@ package com.sesi.astralia.presenter.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sesi.astralia.data.repository.ContentRepository
+import com.sesi.astralia.domain.repository.ContentRepository
 import com.sesi.astralia.domain.dto.ContentCompleteDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

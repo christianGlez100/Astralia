@@ -1,5 +1,9 @@
+
+import com.codingfeline.buildkonfig.compiler.FieldSpec
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -8,6 +12,25 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.buildkonfig)
+}
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()){
+        load(FileInputStream(file))
+    }
+}
+
+val supabaseUrl = localProperties.getProperty("supabase.url") ?: ""
+val supabaseKey = localProperties.getProperty("supabase.key") ?: ""
+
+buildkonfig {
+    packageName = "com.sesi.astralia"
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, "supabaseUrl", supabaseUrl)
+        buildConfigField(FieldSpec.Type.STRING, "supabaseKey", supabaseKey)
+    }
 }
 
 kotlin {

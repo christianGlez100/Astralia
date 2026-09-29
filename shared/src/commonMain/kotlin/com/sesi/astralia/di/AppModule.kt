@@ -1,5 +1,6 @@
 package com.sesi.astralia.di
 
+import com.sesi.astralia.BuildKonfig
 import com.sesi.astralia.data.datasource.CategoryDataSource
 import com.sesi.astralia.data.datasource.ContentDataSource
 import com.sesi.astralia.data.datasource.SubCategoryDataSource
@@ -25,8 +26,8 @@ import org.koin.dsl.module
 fun appModule() = module{
     single {
         createSupabaseClient(
-            supabaseUrl = "https://mwdsyzcsnvhwwxadqyzd.supabase.co",
-            supabaseKey = "sb_publishable_B_kvMOGQd9dZktkYwLXulQ_zcHi2iPK"
+            supabaseUrl = BuildKonfig.supabaseUrl,
+            supabaseKey = BuildKonfig.supabaseKey
         ) {
             defaultLogLevel = LogLevel.DEBUG
             install(Auth)

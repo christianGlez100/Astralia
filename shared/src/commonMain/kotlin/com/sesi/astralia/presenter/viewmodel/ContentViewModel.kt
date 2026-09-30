@@ -18,7 +18,6 @@ class ContentViewModel(private val contentRepository: ContentRepository) : ViewM
                 val content = contentRepository.getContentBySubCategoryId(subCategoryId)
                 _state.value = ContentState.Success(content)
             } catch (e: Exception) {
-                e.printStackTrace()
                 _state.value = ContentState.Error(e.message ?: "Unknown error")
             }
         }

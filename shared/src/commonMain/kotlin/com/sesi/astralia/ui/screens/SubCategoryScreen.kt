@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +49,7 @@ fun SubCategoryScreen(
     categoryDescription: String
 ) {
     val state: SubCategoryState by viewModel.state.collectAsStateWithLifecycle()
-    viewModel.getSubCategoriesByCategoryId(categoryId)
+    GetSubCategories(viewModel, categoryId)
 
     when (state) {
         is SubCategoryState.Loading -> {
@@ -125,6 +126,13 @@ val gradientBkg = Brush.linearGradient(
     start = Offset(0f, 0f),
     end = Offset(0f, 800f)
 )
+
+@Composable
+private fun GetSubCategories(viewModel: SubCategoryViewModel, categoryId: Long) {
+    LaunchedEffect(Unit) {
+        viewModel.getSubCategoriesByCategoryId(categoryId)
+    }
+}
 
 @Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
